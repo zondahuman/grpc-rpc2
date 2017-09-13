@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+option java_multiple_files = true;
+option java_package = "com.abin.lee.grpc.rpc.service";
+option java_outer_classname = "TeamServiceProto";
+
+message TeamRequest {
+	string teamName = 1;
+    sint64 businessId = 2;
+    double teamPrice = 3;
+    string teamAddress = 4;
+}
+
+message TeamResponse {
+	int32 code = 1;
+	string msg = 2;
+}
+
+enum BaseEnum {
+    EXCHANGE_SUCCESS = 0;
+    EXCHANGE_FAILURE = 1;
+    EXCHANGE_ERROR = 2;
+    EXCHANGE_EXCEPTION = 3;
+}
+
+message RootResponse {
+	BaseEnum status = 1;
+	string msg = 2;
+	repeated google.protobuf.Any details = 3;
+}
+
+service TeamService {
+    rpc createTeam (TeamRequest) returns (TeamResponse) {}
+    rpc findById (TeamRequest) returns (TeamResponse) {}
+    rpc findListById (TeamRequest) returns (RootResponse) {}
+}
+
+
+
+
+
+
+
+

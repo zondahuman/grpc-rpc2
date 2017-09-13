@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+
+	    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <tx:annotation-driven proxy-target-class="true"/>
+
+    <bean id="orderService" class="com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcSkeletonFactory">
+        <property name="service" ref="orderServiceImpl"/>
+    </bean>
+    <bean id="voucherService" class="com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcSkeletonFactory">
+        <property name="service" ref="voucherServiceImpl"/>
+    </bean>
+    <bean id="teamService" class="com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcSkeletonFactory">
+        <property name="service" ref="teamServiceImpl"/>
+    </bean>
+
+
+</beans>

@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+option java_multiple_files = true;
+option java_package = "com.abin.lee.grpc.rpc.service";
+option java_outer_classname = "OrderServiceProto";
+
+message OrderRequest {
+	string recipient = 1;
+    string title = 2;
+    string content = 3;
+}
+
+message OrderResponse {
+	int32 code = 1;
+	string msg = 2;
+}
+
+message BaseResponse {
+	OperateEnum status = 1;
+	string msg = 2;
+	repeated google.protobuf.Any details = 3;
+}
+
+enum OperateEnum{
+    OPERATE_SUCCESS = 0;
+    OPERATE_FAILURE = 1;
+    OPERATE_ERROR = 2;
+    OPREATE_EXCEPTION = 3;
+}
+
+service OrderService {
+    rpc createOrder (OrderRequest) returns (OrderResponse) {}
+}
+
+
+
+
+
+
+
+

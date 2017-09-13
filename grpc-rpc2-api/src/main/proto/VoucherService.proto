@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+option java_multiple_files = true;
+option java_package = "com.abin.lee.grpc.rpc.service";
+option java_outer_classname = "VoucherServiceProto";
+
+message VoucherRequest {
+	string voucherName = 1;
+    sint64 batchId = 2;
+    double voucherPrice = 3;
+    sint64 voucherSize = 4;
+}
+
+message VoucherQueryRequest {
+    sint64 id = 2;
+}
+
+message VoucherResponse {
+	VoucherEnum status = 1;
+	string msg = 2;
+	repeated google.protobuf.Any details = 3;
+}
+
+enum VoucherEnum {
+    APPLY_SUCCESS = 0;
+    APPLY_FAILURE = 1;
+    APPLY_ERROR = 2;
+    APPLY_EXCEPTION = 3;
+}
+
+message emptyRequest{}
+
+
+service VoucherService {
+    rpc createVoucher (VoucherRequest) returns (VoucherResponse) {}
+    rpc findById (VoucherQueryRequest) returns (VoucherResponse) {}
+    rpc findAll (emptyRequest) returns (VoucherResponse) {}
+}
+
+
+
+
+
+
+
+
