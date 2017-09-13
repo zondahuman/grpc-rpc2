@@ -16,7 +16,6 @@
     <context:component-scan base-package="com.abin.lee.grpc.rpc.common.context" />
 
     <context:component-scan base-package="com.abin.lee" />
-    <!--<context:component-scan base-package="com.lianjia.message.service,com.lianjia.message.biz,com.lianjia.message.auth" />-->
     <aop:aspectj-autoproxy />
     <aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true"/>
 

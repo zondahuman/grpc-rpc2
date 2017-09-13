@@ -2,8 +2,9 @@ package com.abin.lee.grpc.rpc.stub;
 
 
 import com.abin.lee.grpc.rpc.stub.common.GoogleRpcRemoteAddress;
-import org.springframework.beans.factory.FactoryBean;
+import com.abin.lee.grpc.rpc.stub.common.GoogleRpcStubFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 import java.io.Closeable;
@@ -13,10 +14,10 @@ import java.io.IOException;
  * 服务端注册服务工厂
  */
 @Component
-public class GoogleRpcStubContext implements FactoryBean, InitializingBean, Closeable {
+public class GoogleRpcStubContext implements  InitializingBean, Closeable, Ordered {
     private GoogleRpcRemoteAddress remoteAddress;
     private String service;
-
+    private GoogleRpcStubFactory stubFactory;
     private Object proxyClient;
     private Class<?> objectClass;
 
@@ -25,19 +26,11 @@ public class GoogleRpcStubContext implements FactoryBean, InitializingBean, Clos
 
     }
 
-    @Override
-    public Object getObject() throws Exception {
-        return null;
-    }
-
-    @Override
-    public Class<?> getObjectType() {
-        return null;
-    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        service = stubFactory.getService().toString();
         // 加载Iface接口
         objectClass = classLoader.loadClass(service);
         String grpcName = objectClass.getSimpleName();
@@ -66,4 +59,19 @@ public class GoogleRpcStubContext implements FactoryBean, InitializingBean, Clos
     public void setService(String service) {
         this.service = service;
     }
+
+    public GoogleRpcStubFactory getStubFactory() {
+        return stubFactory;
+    }
+
+    public void setStubFactory(GoogleRpcStubFactory stubFactory) {
+        this.stubFactory = stubFactory;
+    }
+
+    @Override
+    public int getOrder() {
+        return 1;
+    }
+
+
 }

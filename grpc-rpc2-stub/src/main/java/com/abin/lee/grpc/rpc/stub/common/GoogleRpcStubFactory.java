@@ -4,13 +4,12 @@ package com.abin.lee.grpc.rpc.stub.common;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
 
 /**
  * 服务端注册服务工厂
  */
-@Getter
-@Setter
-@ToString
+@Component
 public class GoogleRpcStubFactory {
 
     // 服务实现类

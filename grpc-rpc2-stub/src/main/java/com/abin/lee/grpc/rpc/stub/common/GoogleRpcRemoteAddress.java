@@ -1,6 +1,7 @@
 package com.abin.lee.grpc.rpc.stub.common;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.Closeable;
@@ -11,7 +12,7 @@ import java.io.IOException;
  * grpc-rpc2
  * com.abin.lee.grpc.rpc.stub.common
  */
-@Service
+@Component
 public class GoogleRpcRemoteAddress implements InitializingBean,Closeable {
     // 端口
     private Integer port;

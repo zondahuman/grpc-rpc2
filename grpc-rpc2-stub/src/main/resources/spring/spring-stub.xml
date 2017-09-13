@@ -9,18 +9,23 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 
-    <context:annotation-config />
-    <context:property-placeholder location="classpath*:/*.properties" ignore-unresolvable="true"/>
-    <tx:annotation-driven proxy-target-class="true" />
+    <!--<context:annotation-config />-->
+    <!--<context:property-placeholder location="classpath*:/*.properties" ignore-unresolvable="true"/>-->
+    <!--<tx:annotation-driven proxy-target-class="true" />-->
 
-    <bean id="remoteAddress" class="com.abin.lee.grpc.rpc.stub.common.GoogleRpcRemoteAddress" >
+    <bean id="remoteAddress1" class="com.abin.lee.grpc.rpc.stub.common.GoogleRpcRemoteAddress" destroy-method="close">
         <property name="host" value="${grpc.rpc.host}" />
         <property name="port" value="${grpc.rpc.port}" />
     </bean>
 
     <bean id="orderService" class="com.abin.lee.grpc.rpc.stub.GoogleRpcStubContext" destroy-method="close">
-        <property name="remoteAddress" value="remoteAddress" />
+        <property name="remoteAddress" ref="remoteAddress1" />
         <property name="service" value="com.abin.lee.grpc.rpc.service.OrderServiceGrpc" />
+        <property name="stubFactory">
+            <bean class="com.abin.lee.grpc.rpc.stub.common.GoogleRpcStubFactory">
+                <property name="service" value="com.abin.lee.grpc.rpc.service.OrderServiceGrpc" />
+            </bean>
+        </property>
     </bean>
 
 
