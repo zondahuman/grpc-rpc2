@@ -14,10 +14,12 @@ import java.io.IOException;
  */
 @Component
 public class GoogleRpcRemoteAddress implements InitializingBean,Closeable {
-    // 端口
-    private Integer port;
+
     //主机
     private String host;
+    // 端口
+    private Integer port;
+
 
     public Integer getPort() {
         return port;
@@ -37,11 +39,13 @@ public class GoogleRpcRemoteAddress implements InitializingBean,Closeable {
 
     @Override
     public void close() throws IOException {
+        System.out.println("GoogleRpcRemoteAddress----end : " + host +":" +port);
 
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        System.out.println("GoogleRpcRemoteAddress----start : " + host +":" +port);
 
     }
 }

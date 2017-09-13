@@ -10,7 +10,7 @@
 
 
     <context:annotation-config />
-    <context:property-placeholder location="classpath*:/*.properties" ignore-unresolvable="true"/>
+    <!--<context:property-placeholder location="classpath*:/*.properties" ignore-unresolvable="true"/>-->
 
     <bean id="springContextUtils" class="com.abin.lee.grpc.rpc.common.context.SpringContextUtils"></bean>
     <context:component-scan base-package="com.abin.lee.grpc.rpc.common.context" />

@@ -13,10 +13,7 @@
     <artifactId>grpc-rpc2-stub</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-
     <packaging>war</packaging>
-
-
 
 
 
@@ -26,12 +23,7 @@
             <groupId>com.abin.lee</groupId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
     </dependencies>
-
-
-
-
 
 
 

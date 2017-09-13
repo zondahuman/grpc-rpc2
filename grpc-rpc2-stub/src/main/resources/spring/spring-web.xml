@@ -12,9 +12,9 @@
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>classpath*:*/common.properties</value>
-				<value>classpath*:*/jdbc.properties</value>
-				<value>classpath*:*/redis.properties</value>
+				<value>classpath*:common.properties</value>
+				<value>classpath*:jdbc.properties</value>
+				<value>classpath*:redis.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -25,9 +25,9 @@
 			<list>
 				<!--<value>classpath*:*/common.properties</value>-->
 				<!--<value>classpath*:*/jdbc.properties</value>-->
-				<value>classpath*:*/common.properties</value>
-				<value>classpath*:*/jdbc.properties</value>
-				<value>classpath*:*/redis.properties</value>
+				<value>classpath*:common.properties</value>
+				<value>classpath*:jdbc.properties</value>
+				<value>classpath*:redis.properties</value>
 			</list>
 		</property>
 	</bean>
