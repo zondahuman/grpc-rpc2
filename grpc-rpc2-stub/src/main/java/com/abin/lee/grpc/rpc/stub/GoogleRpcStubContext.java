@@ -32,7 +32,7 @@ public class GoogleRpcStubContext implements FactoryBean, InitializingBean, Clos
     private Object proxyClient;
     private Class<?> objectClass;
 
-    ManagedChannel channel = NettyChannelBuilder.forAddress("localhost", 10086).usePlaintext(true).build();
+    ManagedChannel channel = null;
     @Resource
     GoogleRpcRemoteAddress googleRpcRemoteAddress;
 
@@ -55,42 +55,53 @@ public class GoogleRpcStubContext implements FactoryBean, InitializingBean, Clos
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 //        service = stubFactory.getService().toString();
             // 加载Iface接口
-//            objectClass = classLoader.loadClass((String)service);
-            String grpcName = objectClass.getSimpleName();
-            String allName = objectClass.getName();
-            String prefixName = grpcName.substring(0, grpcName.indexOf("Grpc"));
-            objectClass = classLoader.loadClass(allName + "$"+prefixName+"BlockingStub");
+            Class<?> externalClass = classLoader.loadClass((String) service);
+//            String grpcName = externalClass.getSimpleName();
+//            String allName = externalClass.getName();
+//            String prefixName = grpcName.substring(0, grpcName.indexOf("Grpc"));
+//            objectClass = classLoader.loadClass(allName + "$" + prefixName + "BlockingStub");
 
-            System.out.println("objectClass="+objectClass);
+            System.out.println("externalClass=" + externalClass);
 
-            Constructor<?> constructor = objectClass.getConstructor(clazz);
-            processor = (TProcessor) constructor.newInstance(service);
+            Method newBlockingStub = externalClass.getMethod("newBlockingStub", io.grpc.Channel.class);
 
-            proxyClient = Proxy.newProxyInstance(classLoader, new Class[] { objectClass }, new InvocationHandler() {
-                @Override
-                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            Object[] object = {channel};
+            proxyClient = newBlockingStub.invoke(externalClass, object);
+//            proxyClient = newBlockingStub.invoke(externalClass, channel);
 
-                    TServiceClient client = pool.borrowObject();
-                    boolean flag = true;
-                    try {
-                        System.out.println("objectClass="+objectClass);
-                        System.out.println("client.getClass().getName()="+ client.getClass().getName());
-                        return method.invoke(client, args);
-                    } catch (Exception e) {
-                        flag = false;
-                        throw e;
-                    } finally {
-
-                    }
-                }
-            });
-
-        }
+            System.out.println("proxyClient = " + proxyClient);
+//            newBlockingStub.invoke()
+//            Constructor<?> constructor = objectClass.getConstructor(ManagedChannel.class);
+//            processor = (TProcessor) constructor.newInstance(service);
+//            Constructor<?> cons = cls.getConstructor(String.class, int.class);
+//            Object obj = cons.newInstance("张三", 20); // 为构造方法传递参数
+//
+//
+//            proxyClient = Proxy.newProxyInstance(classLoader, new Class[] { objectClass }, new InvocationHandler() {
+//                @Override
+//                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+//
+//                    TServiceClient client = pool.borrowObject();
+//                    boolean flag = true;
+//                    try {
+//                        System.out.println("objectClass="+objectClass);
+//                        System.out.println("client.getClass().getName()="+ client.getClass().getName());
+//                        return method.invoke(client, args);
+//                    } catch (Exception e) {
+//                        flag = false;
+//                        throw e;
+//                    } finally {
+//
+//                    }
+//                }
+//            });
+//
+//        }
 
 
 //        BindableService
 
-
+        }
     }
 
 
