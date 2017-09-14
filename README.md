@@ -21,3 +21,4 @@ https://developers.google.com/protocol-buffers/docs/reference/proto3-spec
 https://www.javatips.net/api/armeria-master/grpc/src/main/java/com/linecorp/armeria/client/grpc/GrpcClientFactory.java
 
 
+grpc AbstractStub  proxy
