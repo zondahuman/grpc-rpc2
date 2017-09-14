@@ -7,6 +7,7 @@ import com.abin.lee.grpc.rpc.stub.common.GoogleRpcStubFactory;
 import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
+import org.apache.thrift.TProcessor;
 import org.apache.thrift.TServiceClient;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -53,18 +55,21 @@ public class GoogleRpcStubContext implements FactoryBean, InitializingBean, Clos
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 //        service = stubFactory.getService().toString();
             // 加载Iface接口
-            objectClass = classLoader.loadClass((String)service);
+//            objectClass = classLoader.loadClass((String)service);
             String grpcName = objectClass.getSimpleName();
             String allName = objectClass.getName();
             String prefixName = grpcName.substring(0, grpcName.indexOf("Grpc"));
-            Class<?> targetClass = classLoader.loadClass(allName + "$"+prefixName+"BlockingStub");
+            objectClass = classLoader.loadClass(allName + "$"+prefixName+"BlockingStub");
 
-            System.out.println("targetClass="+targetClass);
+            System.out.println("objectClass="+objectClass);
+
+            Constructor<?> constructor = objectClass.getConstructor(clazz);
+            processor = (TProcessor) constructor.newInstance(service);
 
             proxyClient = Proxy.newProxyInstance(classLoader, new Class[] { objectClass }, new InvocationHandler() {
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                    //
+
                     TServiceClient client = pool.borrowObject();
                     boolean flag = true;
                     try {
