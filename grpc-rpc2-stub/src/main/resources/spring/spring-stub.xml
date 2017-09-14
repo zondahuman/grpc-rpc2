@@ -13,10 +13,7 @@
     <!--<context:property-placeholder location="classpath*:/*.properties" ignore-unresolvable="true"/>-->
     <!--<tx:annotation-driven proxy-target-class="true" />-->
 
-    <bean id="googleRpcRemoteAddress" class="com.abin.lee.grpc.rpc.stub.common.GoogleRpcRemoteAddress">
-        <property name="host" value="${grpc.rpc.host}" />
-        <property name="port" value="${grpc.rpc.port}" />
-    </bean>
+
 
     <bean id="orderService" class="com.abin.lee.grpc.rpc.stub.common.GoogleRpcStubFactory" >
         <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
