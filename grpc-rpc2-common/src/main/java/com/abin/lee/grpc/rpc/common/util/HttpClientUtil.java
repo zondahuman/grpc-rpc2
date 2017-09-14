@@ -1,6 +1,7 @@
 package com.abin.lee.grpc.rpc.common.util;
 
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.CookieSpecs;
@@ -17,9 +18,11 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -28,6 +31,7 @@ import javax.net.ssl.*;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -47,6 +51,18 @@ public class HttpClientUtil {
         httpClient = getHttpClient();
         httpsClient = getHttpsClient();
     }
+
+
+    private HttpClientUtil(){}
+
+    private static class HttpClientUtilHolder{
+        private static HttpClientUtil instance = new HttpClientUtil();
+    }
+
+    public static HttpClientUtil getInstance(){
+        return HttpClientUtilHolder.instance;
+    }
+
 
     public static CloseableHttpClient getHttpClient() {
         try {
@@ -104,9 +120,9 @@ public class HttpClientUtil {
     public static RequestConfig requestConfig(){
         RequestConfig requestConfig = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.STANDARD_STRICT)
-                .setConnectionRequestTimeout(20000)
-                .setConnectTimeout(20000)
-                .setSocketTimeout(20000)
+                .setConnectionRequestTimeout(60000)
+                .setConnectTimeout(60000)
+                .setSocketTimeout(60000)
                 .build();
         return requestConfig;
     }
@@ -253,6 +269,62 @@ public class HttpClientUtil {
         return result;
     }
 
+    public static String httpPost(String json, String httpUrl, Map<String, String> headers){
+        String result = "";
+        CloseableHttpClient httpClient = getHttpClient();
+        try {
+            if(StringUtils.isBlank(json))
+                throw new Exception("请求参数不能为空");
+            HttpPost httpPost = new HttpPost(httpUrl);
+            for(Iterator<Map.Entry<String, String>> iterator=headers.entrySet().iterator();iterator.hasNext();){
+                Map.Entry<String, String> entry = iterator.next();
+                Header header = new BasicHeader(entry.getKey(), entry.getValue());
+                httpPost.setHeader(header);
+            }
+            httpPost.setEntity(new StringEntity(json, Charset.forName("UTF-8")));
+            System.out.println("Executing request: " + httpPost.getRequestLine());
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            result = EntityUtils.toString(response.getEntity());
+            System.out.println("Executing response: "+ result);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    public static String httpGet(String httpUrl, Map<String, String> headers) {
+        String result = "";
+        CloseableHttpClient httpClient = getHttpClient();
+        try {
+            HttpGet httpGet = new HttpGet(httpUrl);
+            System.out.println("Executing request: " + httpGet.getRequestLine());
+            for(Iterator<Map.Entry<String, String>> iterator=headers.entrySet().iterator();iterator.hasNext();){
+                Map.Entry<String, String> entry = iterator.next();
+                Header header = new BasicHeader(entry.getKey(), entry.getValue());
+                httpGet.setHeader(header);
+            }
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            result = EntityUtils.toString(response.getEntity());
+            System.out.println("Executing response: "+ result);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+
     public static String httpGet(String httpUrl) {
         String result = "";
         CloseableHttpClient httpClient = getHttpClient();
@@ -276,15 +348,24 @@ public class HttpClientUtil {
 
 
     public static void main(String[] args) {
-        String httpPostUrl = "http://172.16.2.145:9000/trend/find";
-        Map<String, String> request = new HashMap<String, String>();
-        request.put("id", "1");
-        String result = httpPost(request, httpPostUrl);
-        System.out.println("Executing result: "+ result);
+//        String httpPostUrl = "http://172.16.2.145:9000/trend/find";
+//        Map<String, String> request = new HashMap<String, String>();
+//        request.put("id", "1");
+//        String result = httpPost(request, httpPostUrl);
+//        System.out.println("Executing result: "+ result);
+//
+//        String httpGetUrl = "http://172.16.2.145:9000/trend/find?id=1";
+//        String resultGet = httpGet(httpGetUrl);
+//        System.out.println("Executing resultGet: "+ resultGet);
 
-        String httpGetUrl = "http://172.16.2.145:9000/trend/find?id=1";
-        String resultGet = httpGet(httpGetUrl);
-        System.out.println("Executing resultGet: "+ resultGet);
+        String httpPostUrl1 = "http://python.loan.com/rules/risk_tip";
+        Map<String, String> request1 = new HashMap<String, String>();
+        request1.put("Cookie", "rules_session_id=64b713c52c7511e6a4519801a7928995");
+        request1.put("RRDSource", "haohuan");
+        String input = "{\"uid\":\"1\",\"bank_cards\":[\"622123412341234\"],\"mobiles\":[\"15088741234\"],\"name\":\"樊令爱\",\"id_card\":\"320322197308222517\",\"ips\":[\"222.222.222.222\"]}";
+        String result1 = httpPost(input, httpPostUrl1,request1);
+        System.out.println("Executing result1: "+ result1);
+
     }
 
 }
