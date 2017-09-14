@@ -1,7 +1,6 @@
 package com.abin.lee.grpc.rpc.stub;
 
 
-import com.abin.lee.grpc.rpc.stub.common.GoogleRpcRemoteAddress;
 import com.abin.lee.grpc.rpc.stub.common.GoogleRpcStubFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.Ordered;
@@ -15,11 +14,11 @@ import java.io.IOException;
  */
 @Component
 public class GoogleRpcStubContext implements  InitializingBean, Closeable, Ordered {
-    private GoogleRpcRemoteAddress remoteAddress;
     private String service;
     private GoogleRpcStubFactory stubFactory;
     private Object proxyClient;
     private Class<?> objectClass;
+
 
     @Override
     public void close() throws IOException {
@@ -44,13 +43,7 @@ public class GoogleRpcStubContext implements  InitializingBean, Closeable, Order
 
     }
 
-    public GoogleRpcRemoteAddress getRemoteAddress() {
-        return remoteAddress;
-    }
 
-    public void setRemoteAddress(GoogleRpcRemoteAddress remoteAddress) {
-        this.remoteAddress = remoteAddress;
-    }
 
     public String getService() {
         return service;

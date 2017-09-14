@@ -13,19 +13,14 @@
     <!--<context:property-placeholder location="classpath*:/*.properties" ignore-unresolvable="true"/>-->
     <!--<tx:annotation-driven proxy-target-class="true" />-->
 
-    <bean id="remoteAddress1" class="com.abin.lee.grpc.rpc.stub.common.GoogleRpcRemoteAddress" destroy-method="close">
+    <bean id="googleRpcRemoteAddress" class="com.abin.lee.grpc.rpc.stub.common.GoogleRpcRemoteAddress">
         <property name="host" value="${grpc.rpc.host}" />
         <property name="port" value="${grpc.rpc.port}" />
     </bean>
 
-    <bean id="orderService" class="com.abin.lee.grpc.rpc.stub.GoogleRpcStubContext" destroy-method="close">
-        <property name="remoteAddress" ref="remoteAddress1" />
+    <bean id="orderService" class="com.abin.lee.grpc.rpc.stub.common.GoogleRpcStubFactory" >
+        <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
         <property name="service" value="com.abin.lee.grpc.rpc.service.OrderServiceGrpc" />
-        <property name="stubFactory">
-            <bean class="com.abin.lee.grpc.rpc.stub.common.GoogleRpcStubFactory">
-                <property name="service" value="com.abin.lee.grpc.rpc.service.OrderServiceGrpc" />
-            </bean>
-        </property>
     </bean>
 
 

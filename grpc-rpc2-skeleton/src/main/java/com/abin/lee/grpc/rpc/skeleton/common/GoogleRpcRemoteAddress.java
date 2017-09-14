@@ -1,12 +1,7 @@
-package com.abin.lee.grpc.rpc.stub.common;
+package com.abin.lee.grpc.rpc.skeleton.common;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import java.io.Closeable;
-import java.io.IOException;
 
 /**
  * Created by abin on 2017/9/12 2017/9/12.

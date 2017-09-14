@@ -2,6 +2,7 @@ package com.abin.lee.grpc.rpc.skeleton;
 
 
 import com.abin.lee.grpc.rpc.common.context.SpringContextUtils;
+import com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcRemoteAddress;
 import com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcSkeletonFactory;
 import io.grpc.BindableService;
 import io.grpc.Server;
@@ -9,6 +10,7 @@ import io.grpc.netty.NettyServerBuilder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -17,14 +19,13 @@ import java.util.Map;
  */
 @Component
 public class GoogleRpcSkeletonContext {
-    // 端口
-    private Integer port;
-    //主机
-    private String host;
+
+    @Resource
+    GoogleRpcRemoteAddress googleRpcRemoteAddress;
 
     @PostConstruct
     public void init() throws Exception {
-        NettyServerBuilder builder = NettyServerBuilder.forPort(10086);
+        NettyServerBuilder builder = NettyServerBuilder.forPort(googleRpcRemoteAddress.getPort());
 
         Map<String, GoogleRpcSkeletonFactory> handlers = SpringContextUtils.getBeansOfType(GoogleRpcSkeletonFactory.class);
         for (Iterator<Map.Entry<String, GoogleRpcSkeletonFactory>> iterator = handlers.entrySet().iterator(); iterator.hasNext(); ) {
