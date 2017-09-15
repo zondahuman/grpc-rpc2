@@ -30,19 +30,13 @@ public class GoogleRpcSkeletonProxyFactory implements InitializingBean, Closeabl
     private Object service;// serice实现类
     @Resource
     GoogleRpcRemoteAddress googleRpcRemoteAddress;
-
-    public Object getService() {
-        return service;
-    }
-
-    public void setService(Object service) {
-        this.service = service;
-    }
-
+    private static Server server = null;
 
     @Override
     public void close() throws IOException {
-
+        if(!server.isShutdown()){
+            server.shutdown();
+        }
     }
 
     @Override
@@ -69,6 +63,17 @@ public class GoogleRpcSkeletonProxyFactory implements InitializingBean, Closeabl
 //        System.in.read(); // 按任意键退出
         server.awaitTermination();
     }
+
+
+    public Object getService() {
+        return service;
+    }
+
+    public void setService(Object service) {
+        this.service = service;
+    }
+
+
 
     @Override
     public int getOrder() {

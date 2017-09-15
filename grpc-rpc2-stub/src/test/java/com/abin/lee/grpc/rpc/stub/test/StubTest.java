@@ -1,6 +1,9 @@
 package com.abin.lee.grpc.rpc.stub.test;
 
+import com.abin.lee.grpc.rpc.service.OrderServiceGrpc;
 import io.grpc.Channel;
+import io.grpc.ManagedChannel;
+import io.grpc.netty.NettyChannelBuilder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,10 +20,13 @@ public class StubTest {
         String className = "java.util.Date";
         Class c1 = Class.forName(className);
         System.out.println(c1.getSimpleName());
+        ManagedChannel channel = NettyChannelBuilder.forAddress("localhost", 10086).usePlaintext(true).build();
+        OrderServiceGrpc.OrderServiceBlockingStub orderServiceBlockingStub = newClient(OrderServiceGrpc.OrderServiceBlockingStub.class, channel);
+        System.out.println("orderServiceBlockingStub=" + orderServiceBlockingStub);
     }
 
 
-    public <T> T newClient(Class<T> clientType, io.grpc.Channel channel) {
+    public static <T> T newClient(Class<T> clientType, io.grpc.Channel channel) {
         final Class<?> stubClass = clientType.getEnclosingClass();
         if (stubClass == null) {
             throw new IllegalArgumentException("Client type not a gRPC client stub class, " +

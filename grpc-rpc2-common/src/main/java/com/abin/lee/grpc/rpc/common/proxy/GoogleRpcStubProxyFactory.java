@@ -32,11 +32,9 @@
 package com.abin.lee.grpc.rpc.common.proxy;
 
 
-import com.abin.lee.grpc.rpc.common.context.SpringContextUtils;
 import com.abin.lee.grpc.rpc.common.rpc.GoogleRpcRemoteAddress;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
-import io.grpc.stub.AbstractStub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
@@ -45,14 +43,12 @@ import org.springframework.core.Ordered;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  */
-public class GoogleRpcStubProxyClient implements FactoryBean, InitializingBean, Closeable, Ordered {
+public class GoogleRpcStubProxyFactory implements FactoryBean, InitializingBean, Closeable, Ordered {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     // 服务实现类
     private Object service;// serice实现类
@@ -64,52 +60,29 @@ public class GoogleRpcStubProxyClient implements FactoryBean, InitializingBean, 
 
     @Override
     public void close() throws IOException {
-
+        if(!channel.isShutdown()){
+            channel.shutdown();
+        }
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         channel = NettyChannelBuilder.forAddress(googleRpcRemoteAddress.getHost(), googleRpcRemoteAddress.getPort()).usePlaintext(true).build();
-        Object service = null;
-        Map<String, GoogleRpcStubProxyClient> handlers = SpringContextUtils.getBeansOfType(GoogleRpcStubProxyClient.class);
-        for (Iterator<Map.Entry<String, GoogleRpcStubProxyClient>> iterator = handlers.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry<String, GoogleRpcStubProxyClient> entry = iterator.next();
-            String beanName = entry.getKey();
-            GoogleRpcStubProxyClient instance = entry.getValue();
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            Class<?> externalClass = classLoader.loadClass("io.grpc.stub.AbstractStub");
-
-            Constructor<?> constructor = externalClass.getConstructor(io.grpc.Channel.class);
-            LOGGER.info("constructor = " + constructor);
-
-            proxyClient = constructor.newInstance(externalClass);
-            LOGGER.info("proxyClient = " + proxyClient);
-
-//            Class<?> externalClass = classLoader.loadClass((String) instance.getService());
-//            System.out.println("externalClass=" + externalClass);
-//            Method newBlockingStub = externalClass.getMethod("newBlockingStub", io.grpc.Channel.class);
-//            Object[] object = {channel};
-//            proxyClient = newBlockingStub.invoke(externalClass, object);
-//            LOGGER.info("proxyClient = " + proxyClient);
-        }
-
-
-//        Object service = null;
-//        Map<String, GoogleRpcStubProxyClient> handlers = SpringContextUtils.getBeansOfType(GoogleRpcStubProxyClient.class);
-//        for (Iterator<Map.Entry<String, GoogleRpcStubProxyClient>> iterator = handlers.entrySet().iterator(); iterator.hasNext(); ) {
-//            Map.Entry<String, GoogleRpcStubProxyClient> entry = iterator.next();
-//            String beanName = entry.getKey();
-//            GoogleRpcStubProxyClient instance = entry.getValue();
-//            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-//            Class<?> externalClass = classLoader.loadClass((String) instance.getService());
-//            System.out.println("externalClass=" + externalClass);
-//            Method newBlockingStub = externalClass.getMethod("newBlockingStub", io.grpc.Channel.class);
-//            Object[] object = {channel};
-//            proxyClient = newBlockingStub.invoke(externalClass, object);
-//            LOGGER.info("proxyClient = " + proxyClient);
-//        }
+        proxyClient = createClientProxy(channel);
+        LOGGER.info("proxyClient = " + proxyClient);
     }
 
+    public  <T> T createClientProxy(io.grpc.Channel channel) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Object clientProxy = null;
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        Class<?> externalClass = classLoader.loadClass((String)service);
+        LOGGER.info("externalClass=" + externalClass);
+        Method newBlockingStub = externalClass.getMethod("newBlockingStub", io.grpc.Channel.class);
+        Object[] object = {channel};
+        clientProxy = newBlockingStub.invoke(externalClass, object);
+        LOGGER.info("clientProxy = " + clientProxy);
+        return (T)clientProxy;
+    }
 
     public GoogleRpcRemoteAddress getGoogleRpcRemoteAddress() {
         return googleRpcRemoteAddress;

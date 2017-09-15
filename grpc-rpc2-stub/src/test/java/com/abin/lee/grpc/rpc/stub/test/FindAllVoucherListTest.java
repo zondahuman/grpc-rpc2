@@ -18,12 +18,12 @@ import java.util.List;
  * Created with IntelliJ IDEA. User: abin Date: 16-4-28 Time: 下午7:02 To change
  * this template use File | Settings | File Templates.
  */
-public class OrderInsertTest {
-    private static String httpURL = "http://localhost:7100/stub/createOrder";
-//    private static String httpURL = "http://localhost:8300/stub/createOrder";
+public class FindAllVoucherListTest {
+    private static String httpURL = "http://localhost:7100/stub/findAllVoucherList";
+//    private static String httpURL = "http://localhost:8300/stub/findAllVoucherList";
 
     @Test
-    public void testOrderInsert() {
+    public void testFindAllVoucherList() {
         try {
             CloseableHttpClient httpClient = HttpClientUtil.getHttpClient();
             List<NameValuePair> nvps = new ArrayList<NameValuePair>();
