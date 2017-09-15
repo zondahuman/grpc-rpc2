@@ -23,7 +23,7 @@ https://www.javatips.net/api/armeria-master/grpc/src/main/java/com/linecorp/arme
 
 # Grpc Proxy Integration Spring :
 
-grpc stub proxy : GoogleRpcStubProxyClient
+grpc stub proxy : GoogleRpcStubProxyFactory
 
 grpc skeleton proxy : GoogleRpcSkeletonProxyFactory
 
