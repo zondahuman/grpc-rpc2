@@ -1,7 +1,9 @@
 package com.abin.lee.grpc.rpc.stub.common;
 
 
+import com.abin.lee.grpc.rpc.common.context.SpringContextUtils;
 import io.grpc.ManagedChannel;
+import io.grpc.netty.NettyChannelBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,6 +15,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * 服务端注册服务工厂
@@ -35,7 +40,23 @@ public class GoogleRpcStubFactory implements FactoryBean, InitializingBean, Clos
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        channel = NettyChannelBuilder.forAddress(googleRpcRemoteAddress.getHost(), googleRpcRemoteAddress.getPort()).usePlaintext(true).build();
+        Object service = null;
+        Map<String, GoogleRpcStubFactory> handlers = SpringContextUtils.getBeansOfType(GoogleRpcStubFactory.class);
+        for (Iterator<Map.Entry<String, GoogleRpcStubFactory>> iterator = handlers.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, GoogleRpcStubFactory> entry = iterator.next();
+            String beanName = entry.getKey();
+            GoogleRpcStubFactory instance = entry.getValue();
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            Class<?> externalClass = classLoader.loadClass((String) instance.getService());
+            System.out.println("externalClass=" + externalClass);
+            Method newBlockingStub = externalClass.getMethod("newBlockingStub", io.grpc.Channel.class);
+            Object[] object = {channel};
+            proxyClient = newBlockingStub.invoke(externalClass, object);
+//            proxyClient = newBlockingStub.invoke(externalClass, channel);
 
+            System.out.println("proxyClient = " + proxyClient);
+        }
     }
 
 

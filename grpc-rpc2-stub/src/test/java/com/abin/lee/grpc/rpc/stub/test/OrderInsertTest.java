@@ -19,7 +19,8 @@ import java.util.List;
  * this template use File | Settings | File Templates.
  */
 public class OrderInsertTest {
-    private static String httpURL = "http://localhost:7100/stub/createOrder";
+//    private static String httpURL = "http://localhost:7100/stub/createOrder";
+    private static String httpURL = "http://localhost:8300/stub/createOrder";
 
     @Test
     public void testCacheInsert() {

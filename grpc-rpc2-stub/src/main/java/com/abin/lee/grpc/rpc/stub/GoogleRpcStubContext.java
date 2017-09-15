@@ -31,26 +31,22 @@ import java.util.Map;
 public class GoogleRpcStubContext implements FactoryBean, InitializingBean, Closeable, Ordered {
     private Object proxyClient;
     private Class<?> objectClass;
-    private Object service;
+
     ManagedChannel channel = null;
     @Resource
     GoogleRpcRemoteAddress googleRpcRemoteAddress;
-
-    @Override
-    public void close() throws IOException {
-
-    }
 
 
     @Override
     public void afterPropertiesSet() throws Exception {
         channel = NettyChannelBuilder.forAddress(googleRpcRemoteAddress.getHost(), googleRpcRemoteAddress.getPort()).usePlaintext(true).build();
         Object service = null;
-        Map<String, GoogleRpcStubContext> handlers = SpringContextUtils.getBeansOfType(GoogleRpcStubContext.class);
-        for (Iterator<Map.Entry<String, GoogleRpcStubContext>> iterator = handlers.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry<String, GoogleRpcStubContext> entry = iterator.next();
+        Map<String, GoogleRpcStubFactory> handlers = SpringContextUtils.getBeansOfType(GoogleRpcStubFactory.class);
+        for (Iterator<Map.Entry<String, GoogleRpcStubFactory>> iterator = handlers.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, GoogleRpcStubFactory> entry = iterator.next();
             String beanName = entry.getKey();
-            GoogleRpcStubContext instance = entry.getValue();
+            GoogleRpcStubFactory instance = entry.getValue();
+            service = instance.getService();
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 //        service = stubFactory.getService().toString();
             // 加载Iface接口
@@ -116,7 +112,7 @@ public class GoogleRpcStubContext implements FactoryBean, InitializingBean, Clos
 
     @Override
     public boolean isSingleton() {
-        return false;
+        return true;
     }
 
     @Override
@@ -124,27 +120,20 @@ public class GoogleRpcStubContext implements FactoryBean, InitializingBean, Clos
         return 1;
     }
 
-    public Object getProxyClient() {
-        return proxyClient;
+    @Override
+    public void close() throws IOException {
+        if(channel!=null){
+            try {
+                if(!channel.isShutdown())
+                    channel.shutdown();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void setProxyClient(Object proxyClient) {
-        this.proxyClient = proxyClient;
-    }
 
-    public Class<?> getObjectClass() {
-        return objectClass;
-    }
 
-    public void setObjectClass(Class<?> objectClass) {
-        this.objectClass = objectClass;
-    }
 
-    public Object getService() {
-        return service;
-    }
-
-    public void setService(Object service) {
-        this.service = service;
-    }
 }
