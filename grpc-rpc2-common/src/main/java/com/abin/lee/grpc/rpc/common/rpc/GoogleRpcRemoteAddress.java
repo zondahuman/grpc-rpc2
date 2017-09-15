@@ -1,12 +1,7 @@
-package com.abin.lee.grpc.rpc.stub.common;
+package com.abin.lee.grpc.rpc.common.rpc;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import java.io.Closeable;
-import java.io.IOException;
 
 /**
  * Created by abin on 2017/9/12 2017/9/12.
@@ -14,7 +9,7 @@ import java.io.IOException;
  * com.abin.lee.grpc.rpc.stub.common
  */
 @Component
-public class GoogleRpcRemoteAddress  {
+public class GoogleRpcRemoteAddress {
 
     //主机
     @Value("${grpc.rpc.host}")

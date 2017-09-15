@@ -21,11 +21,23 @@ https://developers.google.com/protocol-buffers/docs/reference/proto3-spec
 https://www.javatips.net/api/armeria-master/grpc/src/main/java/com/linecorp/armeria/client/grpc/GrpcClientFactory.java
 
 
-Grpc Proxy Integration Spring :
+# Grpc Proxy Integration Spring :
 
 grpc stub proxy : GoogleRpcStubProxyClient
 
 grpc skeleton proxy : GoogleRpcSkeletonProxyFactory
+
+
+
+# armeria
+https://github.com/line/armeria
+
+
+
+
+
+
+
 
 
 

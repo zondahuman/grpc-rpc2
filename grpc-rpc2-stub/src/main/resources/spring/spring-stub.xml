@@ -15,18 +15,18 @@
 
 
 
-    <bean id="orderService" class="com.abin.lee.grpc.rpc.stub.proxy.GoogleRpcStubProxyClient" >
+    <bean id="orderService" class="com.abin.lee.grpc.rpc.common.proxy.GoogleRpcStubProxyClient" >
         <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
         <property name="service" value="com.abin.lee.grpc.rpc.service.OrderServiceGrpc" />
     </bean>
 
 
-    <bean id="teamService" class="com.abin.lee.grpc.rpc.stub.proxy.GoogleRpcStubProxyClient" >
+    <bean id="teamService" class="com.abin.lee.grpc.rpc.common.proxy.GoogleRpcStubProxyClient" >
         <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
         <property name="service" value="com.abin.lee.grpc.rpc.service.TeamServiceGrpc" />
     </bean>
 
-    <bean id="voucherService" class="com.abin.lee.grpc.rpc.stub.proxy.GoogleRpcStubProxyClient" >
+    <bean id="voucherService" class="com.abin.lee.grpc.rpc.common.proxy.GoogleRpcStubProxyClient" >
         <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
         <property name="service" value="com.abin.lee.grpc.rpc.service.VoucherServiceGrpc" />
     </bean>

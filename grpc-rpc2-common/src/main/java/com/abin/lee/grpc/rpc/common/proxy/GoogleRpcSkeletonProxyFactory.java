@@ -1,8 +1,8 @@
-package com.abin.lee.grpc.rpc.skeleton.proxy;
+package com.abin.lee.grpc.rpc.common.proxy;
 
 
 import com.abin.lee.grpc.rpc.common.context.SpringContextUtils;
-import com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcRemoteAddress;
+import com.abin.lee.grpc.rpc.common.rpc.GoogleRpcRemoteAddress;
 import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
