@@ -15,6 +15,8 @@ import org.springframework.core.Ordered;
 import javax.annotation.Resource;
 import java.io.Closeable;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -41,7 +43,8 @@ public class GoogleRpcSkeletonProxyFactory implements InitializingBean, Closeabl
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        NettyServerBuilder builder = NettyServerBuilder.forPort(googleRpcRemoteAddress.getPort());
+        SocketAddress address = new InetSocketAddress(googleRpcRemoteAddress.getHost(), googleRpcRemoteAddress.getPort());
+        NettyServerBuilder builder = NettyServerBuilder.forAddress(address);
 
         Map<String, GoogleRpcSkeletonProxyFactory> handlers = SpringContextUtils.getBeansOfType(GoogleRpcSkeletonProxyFactory.class);
         for (Iterator<Map.Entry<String, GoogleRpcSkeletonProxyFactory>> iterator = handlers.entrySet().iterator(); iterator.hasNext(); ) {
