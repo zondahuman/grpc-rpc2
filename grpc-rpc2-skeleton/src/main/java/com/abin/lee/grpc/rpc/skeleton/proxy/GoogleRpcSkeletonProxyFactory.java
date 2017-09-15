@@ -1,4 +1,4 @@
-package com.abin.lee.grpc.rpc.skeleton.common;
+package com.abin.lee.grpc.rpc.skeleton.proxy;
 
 
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class GoogleRpcSkeletonFactory {
+public class GoogleRpcSkeletonProxyFactory {
 
     // 服务实现类
     private Object service;// serice实现类

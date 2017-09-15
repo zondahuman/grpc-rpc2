@@ -9,13 +9,13 @@
 
     <tx:annotation-driven proxy-target-class="true"/>
 
-    <bean id="orderService" class="com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcSkeletonFactory">
+    <bean id="orderService" class="com.abin.lee.grpc.rpc.skeleton.proxy.GoogleRpcSkeletonProxyFactory">
         <property name="service" ref="orderServiceImpl"/>
     </bean>
-    <bean id="voucherService" class="com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcSkeletonFactory">
+    <bean id="voucherService" class="com.abin.lee.grpc.rpc.skeleton.proxy.GoogleRpcSkeletonProxyFactory">
         <property name="service" ref="voucherServiceImpl"/>
     </bean>
-    <bean id="teamService" class="com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcSkeletonFactory">
+    <bean id="teamService" class="com.abin.lee.grpc.rpc.skeleton.proxy.GoogleRpcSkeletonProxyFactory">
         <property name="service" ref="teamServiceImpl"/>
     </bean>
 

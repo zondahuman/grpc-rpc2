@@ -3,7 +3,7 @@ package com.abin.lee.grpc.rpc.skeleton;
 
 import com.abin.lee.grpc.rpc.common.context.SpringContextUtils;
 import com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcRemoteAddress;
-import com.abin.lee.grpc.rpc.skeleton.common.GoogleRpcSkeletonFactory;
+import com.abin.lee.grpc.rpc.skeleton.proxy.GoogleRpcSkeletonProxyFactory;
 import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
@@ -27,14 +27,14 @@ public class GoogleRpcSkeletonContext {
     public void init() throws Exception {
         NettyServerBuilder builder = NettyServerBuilder.forPort(googleRpcRemoteAddress.getPort());
 
-        Map<String, GoogleRpcSkeletonFactory> handlers = SpringContextUtils.getBeansOfType(GoogleRpcSkeletonFactory.class);
-        for (Iterator<Map.Entry<String, GoogleRpcSkeletonFactory>> iterator = handlers.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry<String, GoogleRpcSkeletonFactory> entry = iterator.next();
+        Map<String, GoogleRpcSkeletonProxyFactory> handlers = SpringContextUtils.getBeansOfType(GoogleRpcSkeletonProxyFactory.class);
+        for (Iterator<Map.Entry<String, GoogleRpcSkeletonProxyFactory>> iterator = handlers.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, GoogleRpcSkeletonProxyFactory> entry = iterator.next();
             String beanName = entry.getKey();
-            GoogleRpcSkeletonFactory instance = entry.getValue();
+            GoogleRpcSkeletonProxyFactory instance = entry.getValue();
             Object service = instance.getService();
             Class<?> serviceClass = service.getClass();
-            builder.addService((BindableService)service);
+            builder.addService((BindableService) service);
         }
 
         Server server = builder.build();
@@ -47,7 +47,6 @@ public class GoogleRpcSkeletonContext {
 //        System.in.read(); // 按任意键退出
         server.awaitTermination();
     }
-
 
 
 }

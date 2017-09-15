@@ -15,7 +15,7 @@
 
 
 
-    <bean id="orderService" class="com.abin.lee.grpc.rpc.stub.common.GoogleRpcStubFactory" >
+    <bean id="orderService" class="com.abin.lee.grpc.rpc.stub.proxy.GoogleRpcStubProxyClient" >
         <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
         <property name="service" value="com.abin.lee.grpc.rpc.service.OrderServiceGrpc" />
     </bean>
