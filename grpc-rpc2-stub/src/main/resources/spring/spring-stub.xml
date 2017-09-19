@@ -17,18 +17,30 @@
 
     <bean id="orderService" class="com.abin.lee.grpc.rpc.common.proxy.GoogleRpcStubProxyFactory" >
         <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
-        <property name="service" value="com.abin.lee.grpc.rpc.service.OrderServiceGrpc" />
+        <property name="service" value="com.abin.lee.grpc.rpc.service.OrderServiceGrpc$OrderServiceStub" />
     </bean>
+
+    <bean id="orderBlockingService" class="com.abin.lee.grpc.rpc.common.proxy.GoogleRpcStubProxyFactory" >
+        <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
+        <property name="service" value="com.abin.lee.grpc.rpc.service.OrderServiceGrpc$OrderServiceBlockingStub" />
+    </bean>
+
+
+    <bean id="orderFutureService" class="com.abin.lee.grpc.rpc.common.proxy.GoogleRpcStubProxyFactory" >
+        <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
+        <property name="service" value="com.abin.lee.grpc.rpc.service.OrderServiceGrpc$OrderServiceFutureStub" />
+    </bean>
+
 
 
     <bean id="teamService" class="com.abin.lee.grpc.rpc.common.proxy.GoogleRpcStubProxyFactory" >
         <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
-        <property name="service" value="com.abin.lee.grpc.rpc.service.TeamServiceGrpc" />
+        <property name="service" value="com.abin.lee.grpc.rpc.service.TeamServiceGrpc$TeamServiceBlockingStub" />
     </bean>
 
     <bean id="voucherService" class="com.abin.lee.grpc.rpc.common.proxy.GoogleRpcStubProxyFactory" >
         <property name="googleRpcRemoteAddress" ref="googleRpcRemoteAddress" />
-        <property name="service" value="com.abin.lee.grpc.rpc.service.VoucherServiceGrpc" />
+        <property name="service" value="com.abin.lee.grpc.rpc.service.VoucherServiceGrpc$VoucherServiceBlockingStub" />
     </bean>
 
 

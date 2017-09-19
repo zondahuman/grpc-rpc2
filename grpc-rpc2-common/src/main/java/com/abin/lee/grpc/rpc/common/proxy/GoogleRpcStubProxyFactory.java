@@ -32,9 +32,11 @@
 package com.abin.lee.grpc.rpc.common.proxy;
 
 
+import com.abin.lee.grpc.rpc.common.enums.GoogleGrpcRpcClientEnum;
 import com.abin.lee.grpc.rpc.common.rpc.GoogleRpcRemoteAddress;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
@@ -50,9 +52,7 @@ import java.lang.reflect.Method;
  */
 public class GoogleRpcStubProxyFactory implements FactoryBean, InitializingBean, Closeable, Ordered {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    // 服务实现类
-    private Object service;// serice实现类
-
+    private Object service;
     private GoogleRpcRemoteAddress googleRpcRemoteAddress;
     private Object proxyClient;
     private Class<?> objectClass;
@@ -77,12 +77,31 @@ public class GoogleRpcStubProxyFactory implements FactoryBean, InitializingBean,
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Class<?> externalClass = classLoader.loadClass((String)service);
         LOGGER.info("externalClass=" + externalClass);
-        Method newBlockingStub = externalClass.getMethod("newBlockingStub", io.grpc.Channel.class);
-        Object[] object = {channel};
-        clientProxy = newBlockingStub.invoke(externalClass, object);
+//        Method newBlockingStub = externalClass.getMethod("newBlockingStub", io.grpc.Channel.class);
+//        Object[] object = {channel};
+//        clientProxy = newBlockingStub.invoke(externalClass, object);
+        clientProxy = GoogleGrpcStubUtil.newClient(externalClass, channel);
         LOGGER.info("clientProxy = " + clientProxy);
         return (T)clientProxy;
     }
+
+    public <T> T createSpecificProxy(Class<?> externalClass, io.grpc.Channel channel, String clientType) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method clientMode = null;
+        if(StringUtils.equals(clientType, GoogleGrpcRpcClientEnum.STUB.getParam())) {
+            clientMode = externalClass.getMethod("newStub", io.grpc.Channel.class);
+        }else if(StringUtils.equals(clientType, GoogleGrpcRpcClientEnum.STUB.getParam())) {
+            clientMode = externalClass.getMethod("newBlockingStub", io.grpc.Channel.class);
+        }else if(StringUtils.equals(clientType, GoogleGrpcRpcClientEnum.STUB.getParam())) {
+            clientMode = externalClass.getMethod("newFutureStub", io.grpc.Channel.class);
+        }else {
+            throw new RuntimeException("wrong client type ...");
+        }
+        Object[] object = {channel};
+        Object clientProxy = clientMode.invoke(externalClass, object);
+        LOGGER.info("clientProxy = " + clientProxy);
+        return (T)clientProxy;
+    }
+
 
     public GoogleRpcRemoteAddress getGoogleRpcRemoteAddress() {
         return googleRpcRemoteAddress;
@@ -135,4 +154,7 @@ public class GoogleRpcStubProxyFactory implements FactoryBean, InitializingBean,
     public void setService(Object service) {
         this.service = service;
     }
+
+
+
 }
