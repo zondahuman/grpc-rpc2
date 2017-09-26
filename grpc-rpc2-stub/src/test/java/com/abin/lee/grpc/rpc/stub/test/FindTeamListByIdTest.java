@@ -19,8 +19,15 @@ import java.util.List;
  * this template use File | Settings | File Templates.
  */
 public class FindTeamListByIdTest {
-    private static String httpURL = "http://localhost:7100/stub/findTeamListById";
+//    private static String httpURL = "http://localhost:7100/stub/findTeamListById";
 //    private static String httpURL = "http://localhost:8300/stub/findTeamListById";
+//private static String httpURL = "http://172.16.2.132:8300/stub/findTeamListById";
+//private static String httpURL = "http://172.16.2.132:10001/stub/findTeamListById";
+    private static String httpURL = "http://172.16.2.132:80/stub/findTeamListById";
+//    private static String httpURL = "http://172.16.2.133:8500/stub/findTeamListById";
+//    private static String httpURL = "http://172.16.2.133:10001/stub/findTeamListById";
+//    private static String httpURL = "http://172.16.2.133:80/stub/findTeamListById";
+
 
     @Test
     public void testFindTeamListById() {
