@@ -36,6 +36,15 @@ https://github.com/line/armeria
 
 
 
+线上机：132执行
+/usr/local/tcpcopy/sbin/tcpcopy -x 80-172.16.2.133:80 -s 172.16.2.134 -n 5 -c 10.10.10.x -d -C 4 -l tcpcopy.log  -P /var/run/tcpcopy.pid
+
+关闭response，intercept机器：134执行
+/usr/local/intercept/sbin/intercept -i eth0 -l intercept.log -P /var/run/intercept.pid -F 'tcp and src port 80' -d
+
+133执行：
+route add -net 10.10.10.0 netmask 255.255.255.0 gw 172.16.2.134
+
 
 
 
