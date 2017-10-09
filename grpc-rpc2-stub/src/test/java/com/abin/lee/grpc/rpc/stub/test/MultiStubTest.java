@@ -1,7 +1,7 @@
 package com.abin.lee.grpc.rpc.stub.test;
 
+import com.abin.lee.grpc.rpc.common.proxy.GoogleGrpcStubUtil;
 import com.abin.lee.grpc.rpc.service.OrderServiceGrpc;
-import com.abin.lee.grpc.rpc.stub.proxy.GoogleGrpcStubUtil;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 
