@@ -34,7 +34,7 @@ https://github.com/line/armeria
 
 
 
-
+# tcpcpoy pressure test
 
 线上机：132执行
 /usr/local/tcpcopy/sbin/tcpcopy -x 80-172.16.2.133:80 -s 172.16.2.134 -n 5 -c 10.10.10.x -d -C 4 -l tcpcopy.log  -P /var/run/tcpcopy.pid
